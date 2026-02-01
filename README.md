@@ -9,7 +9,7 @@
 ## 1. Introduction
 
 <div>
-  <img width="30%" src=assets/context-drag-overview.png>
+  <img width="90%" src=assets/context-drag-overview.png>
 </div>
 
 ## 2. Usage

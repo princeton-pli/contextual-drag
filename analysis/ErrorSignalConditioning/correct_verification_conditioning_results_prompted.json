@@ -1,0 +1,402 @@
+{
+  "aime24": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.41875,
+      "correctness_filtered": 0.4570833333333334,
+      "correctness_raw_init_sampling": 0.55625,
+      "correctness_filtered_init_sampling": 0.55625,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.4875,
+      "correctness_filtered": 0.4844105894105894,
+      "correctness_raw_init_sampling": 0.65,
+      "correctness_filtered_init_sampling": 0.65,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.25,
+      "correctness_filtered": 0.3007142857142857,
+      "correctness_raw_init_sampling": 0.6625,
+      "correctness_filtered_init_sampling": 0.6625,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.60625,
+      "correctness_filtered": 0.7610642135642135,
+      "correctness_raw_init_sampling": 0.675,
+      "correctness_filtered_init_sampling": 0.675,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.175,
+      "correctness_filtered": 0.22082251082251086,
+      "correctness_raw_init_sampling": 0.51875,
+      "correctness_filtered_init_sampling": 0.51875,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.76875,
+      "correctness_filtered": 0.8865934065934067,
+      "correctness_raw_init_sampling": 0.8375,
+      "correctness_filtered_init_sampling": 0.8375,
+      "num_problems": 10,
+      "num_problems_filtered": 10
+    }
+  },
+  "aime25": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.3076923076923077,
+      "correctness_filtered": 0.36645299145299143,
+      "correctness_raw_init_sampling": 0.4567307692307692,
+      "correctness_filtered_init_sampling": 0.4567307692307692,
+      "num_problems": 13,
+      "num_problems_filtered": 13
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.46875,
+      "correctness_filtered": 0.5808832371332372,
+      "correctness_raw_init_sampling": 0.5480769230769231,
+      "correctness_filtered_init_sampling": 0.5572916666666666,
+      "num_problems": 13,
+      "num_problems_filtered": 12
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.34134615384615385,
+      "correctness_filtered": 0.3983516483516484,
+      "correctness_raw_init_sampling": 0.6682692307692307,
+      "correctness_filtered_init_sampling": 0.6682692307692307,
+      "num_problems": 13,
+      "num_problems_filtered": 13
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.5625,
+      "correctness_filtered": 0.6176129426129425,
+      "correctness_raw_init_sampling": 0.6778846153846154,
+      "correctness_filtered_init_sampling": 0.6778846153846154,
+      "num_problems": 13,
+      "num_problems_filtered": 13
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.17708333333333334,
+      "correctness_filtered": 0.27777777777777773,
+      "correctness_raw_init_sampling": 0.5192307692307693,
+      "correctness_filtered_init_sampling": 0.5052083333333334,
+      "num_problems": 13,
+      "num_problems_filtered": 12
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.7135416666666666,
+      "correctness_filtered": 0.7516899766899767,
+      "correctness_raw_init_sampling": 0.7836538461538461,
+      "correctness_filtered_init_sampling": 0.7760416666666666,
+      "num_problems": 13,
+      "num_problems_filtered": 12
+    }
+  },
+  "hmmt24": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.2734375,
+      "correctness_filtered": 0.30781440781440783,
+      "correctness_raw_init_sampling": 0.21875,
+      "correctness_filtered_init_sampling": 0.21875,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.37890625,
+      "correctness_filtered": 0.4006132756132756,
+      "correctness_raw_init_sampling": 0.390625,
+      "correctness_filtered_init_sampling": 0.390625,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.26171875,
+      "correctness_filtered": 0.26512896825396826,
+      "correctness_raw_init_sampling": 0.48828125,
+      "correctness_filtered_init_sampling": 0.48828125,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.4375,
+      "correctness_filtered": 0.4826146076146076,
+      "correctness_raw_init_sampling": 0.4921875,
+      "correctness_filtered_init_sampling": 0.4921875,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.1328125,
+      "correctness_filtered": 0.14256403318903318,
+      "correctness_raw_init_sampling": 0.40234375,
+      "correctness_filtered_init_sampling": 0.40234375,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.57421875,
+      "correctness_filtered": 0.5694463522588522,
+      "correctness_raw_init_sampling": 0.6171875,
+      "correctness_filtered_init_sampling": 0.6171875,
+      "num_problems": 16,
+      "num_problems_filtered": 16
+    }
+  },
+  "hmmt25": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.3392857142857143,
+      "correctness_filtered": 0.39115130900845196,
+      "correctness_raw_init_sampling": 0.4226190476190476,
+      "correctness_filtered_init_sampling": 0.4226190476190476,
+      "num_problems": 21,
+      "num_problems_filtered": 21
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.42857142857142855,
+      "correctness_filtered": 0.5165824915824917,
+      "correctness_raw_init_sampling": 0.49702380952380953,
+      "correctness_filtered_init_sampling": 0.49702380952380953,
+      "num_problems": 21,
+      "num_problems_filtered": 21
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.4,
+      "correctness_filtered": 0.4395833333333333,
+      "correctness_raw_init_sampling": 0.6101190476190477,
+      "correctness_filtered_init_sampling": 0.628125,
+      "num_problems": 21,
+      "num_problems_filtered": 20
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.5922619047619048,
+      "correctness_filtered": 0.7017121767121768,
+      "correctness_raw_init_sampling": 0.6309523809523809,
+      "correctness_filtered_init_sampling": 0.6309523809523809,
+      "num_problems": 21,
+      "num_problems_filtered": 21
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.2708333333333333,
+      "correctness_filtered": 0.2743764172335601,
+      "correctness_raw_init_sampling": 0.5863095238095238,
+      "correctness_filtered_init_sampling": 0.5863095238095238,
+      "num_problems": 21,
+      "num_problems_filtered": 21
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.7708333333333334,
+      "correctness_filtered": 0.8421070992499563,
+      "correctness_raw_init_sampling": 0.8035714285714286,
+      "correctness_filtered_init_sampling": 0.8035714285714286,
+      "num_problems": 21,
+      "num_problems_filtered": 21
+    }
+  },
+  "gpqa": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.382,
+      "correctness_filtered": 0.38454195804195795,
+      "correctness_raw_init_sampling": 0.4777462121212121,
+      "correctness_filtered_init_sampling": 0.469,
+      "num_problems": 132,
+      "num_problems_filtered": 125
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.5495,
+      "correctness_filtered": 0.5815719835719836,
+      "correctness_raw_init_sampling": 0.5762310606060606,
+      "correctness_filtered_init_sampling": 0.5535,
+      "num_problems": 132,
+      "num_problems_filtered": 125
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.44140625,
+      "correctness_filtered": 0.41585751488095235,
+      "correctness_raw_init_sampling": 0.5823863636363636,
+      "correctness_filtered_init_sampling": 0.576171875,
+      "num_problems": 132,
+      "num_problems_filtered": 128
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.5025826446280992,
+      "correctness_filtered": 0.5508919684539518,
+      "correctness_raw_init_sampling": 0.5160984848484849,
+      "correctness_filtered_init_sampling": 0.4927685950413223,
+      "num_problems": 132,
+      "num_problems_filtered": 121
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.32142857142857145,
+      "correctness_filtered": 0.3535227779275399,
+      "correctness_raw_init_sampling": 0.4696969696969697,
+      "correctness_filtered_init_sampling": 0.46279761904761907,
+      "num_problems": 132,
+      "num_problems_filtered": 126
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.6488347457627118,
+      "correctness_filtered": 0.6835160249355166,
+      "correctness_raw_init_sampling": 0.6680871212121212,
+      "correctness_filtered_init_sampling": 0.638771186440678,
+      "num_problems": 132,
+      "num_problems_filtered": 118
+    }
+  },
+  "mmlu": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.6608187134502924,
+      "correctness_filtered": 0.7025471685559406,
+      "correctness_raw_init_sampling": 0.6165421792618629,
+      "correctness_filtered_init_sampling": 0.6317007797270955,
+      "num_problems": 569,
+      "num_problems_filtered": 513
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.8052218114602587,
+      "correctness_filtered": 0.84218490741134,
+      "correctness_raw_init_sampling": 0.7061731107205624,
+      "correctness_filtered_init_sampling": 0.7087569316081331,
+      "num_problems": 569,
+      "num_problems_filtered": 541
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.7377495462794919,
+      "correctness_filtered": 0.7269037979564296,
+      "correctness_raw_init_sampling": 0.6758567662565905,
+      "correctness_filtered_init_sampling": 0.6737749546279492,
+      "num_problems": 569,
+      "num_problems_filtered": 551
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.6420833333333333,
+      "correctness_filtered": 0.6705463579630246,
+      "correctness_raw_init_sampling": 0.5645869947275922,
+      "correctness_filtered_init_sampling": 0.5661111111111111,
+      "num_problems": 569,
+      "num_problems_filtered": 450
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.5077979515828678,
+      "correctness_filtered": 0.652358517232819,
+      "correctness_raw_init_sampling": 0.5886423550087874,
+      "correctness_filtered_init_sampling": 0.5878724394785847,
+      "num_problems": 569,
+      "num_problems_filtered": 537
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.8025815217391304,
+      "correctness_filtered": 0.8158173408716888,
+      "correctness_raw_init_sampling": 0.6724516695957821,
+      "correctness_filtered_init_sampling": 0.6834239130434783,
+      "num_problems": 569,
+      "num_problems_filtered": 460
+    }
+  },
+  "crux-i": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.515625,
+      "correctness_filtered": 0.536220170196234,
+      "correctness_raw_init_sampling": 0.6748670212765957,
+      "correctness_filtered_init_sampling": 0.6748670212765957,
+      "num_problems": 188,
+      "num_problems_filtered": 188
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.6724726775956285,
+      "correctness_filtered": 0.7078774974266776,
+      "correctness_raw_init_sampling": 0.758311170212766,
+      "correctness_filtered_init_sampling": 0.7530737704918032,
+      "num_problems": 188,
+      "num_problems_filtered": 183
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.8058510638297872,
+      "correctness_filtered": 0.8209923941306922,
+      "correctness_raw_init_sampling": 0.8922872340425532,
+      "correctness_filtered_init_sampling": 0.8922872340425532,
+      "num_problems": 188,
+      "num_problems_filtered": 188
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.3939285714285714,
+      "correctness_filtered": 0.432318007389436,
+      "correctness_raw_init_sampling": 0.43550531914893614,
+      "correctness_filtered_init_sampling": 0.4382142857142857,
+      "num_problems": 188,
+      "num_problems_filtered": 175
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.4873633879781421,
+      "correctness_filtered": 0.5772409663803106,
+      "correctness_raw_init_sampling": 0.6133643617021277,
+      "correctness_filtered_init_sampling": 0.6144125683060109,
+      "num_problems": 188,
+      "num_problems_filtered": 183
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.686046511627907,
+      "correctness_filtered": 0.7258298306990167,
+      "correctness_raw_init_sampling": 0.7706117021276596,
+      "correctness_filtered_init_sampling": 0.7877906976744186,
+      "num_problems": 188,
+      "num_problems_filtered": 172
+    }
+  },
+  "24-game": {
+    "Qwen3_8B": {
+      "correctness_raw": 0.48876728110599077,
+      "correctness_filtered": 0.6105857191110646,
+      "correctness_raw_init_sampling": 0.7629211332312404,
+      "correctness_filtered_init_sampling": 0.7622887864823349,
+      "num_problems": 653,
+      "num_problems_filtered": 651
+    },
+    "Qwen3_32B": {
+      "correctness_raw": 0.6054447852760736,
+      "correctness_filtered": 0.6823285269604288,
+      "correctness_raw_init_sampling": 0.7848392036753445,
+      "correctness_filtered_init_sampling": 0.7847967791411042,
+      "num_problems": 653,
+      "num_problems_filtered": 652
+    },
+    "GPT_OSS_120B": {
+      "correctness_raw": 0.6258614088820827,
+      "correctness_filtered": 0.6348682774601612,
+      "correctness_raw_init_sampling": 0.7733537519142419,
+      "correctness_filtered_init_sampling": 0.7733537519142419,
+      "num_problems": 653,
+      "num_problems_filtered": 653
+    },
+    "Nemotron_7B": {
+      "correctness_raw": 0.6936443932411674,
+      "correctness_filtered": 0.751701867427674,
+      "correctness_raw_init_sampling": 0.75354134762634,
+      "correctness_filtered_init_sampling": 0.7534562211981567,
+      "num_problems": 653,
+      "num_problems_filtered": 651
+    },
+    "GPT_OSS_20B": {
+      "correctness_raw": 0.7435675883256528,
+      "correctness_filtered": 0.8182288546919881,
+      "correctness_raw_init_sampling": 0.78302067381317,
+      "correctness_filtered_init_sampling": 0.7837941628264209,
+      "num_problems": 653,
+      "num_problems_filtered": 651
+    },
+    "Nemotron_32B": {
+      "correctness_raw": 0.7408116385911179,
+      "correctness_filtered": 0.7523529112541364,
+      "correctness_raw_init_sampling": 0.7953675344563553,
+      "correctness_filtered_init_sampling": 0.7953675344563553,
+      "num_problems": 653,
+      "num_problems_filtered": 653
+    }
+  }
+}

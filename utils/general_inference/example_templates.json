@@ -1,0 +1,7 @@
+{
+    "math_step_by_step": "{arg_problem} Let's think step by step and please wrap your final answer in \\boxed{{}}.",
+    "simple_question": "Please solve this problem: {arg_problem}",
+    "multi_field_example": "Given the problem: {arg_problem} with difficulty level {arg_difficulty}, please provide a solution.",
+    "context_aware": "Context: {arg_context}\n\nQuestion: {arg_question}\n\nPlease provide a detailed answer.",
+    "reasoning_prompt": "Problem: {arg_problem}\n\nPlease explain your reasoning step by step and provide the final answer."
+}

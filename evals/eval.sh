@@ -80,7 +80,7 @@ PROJECT_DIR="."
 cd $PROJECT_DIR || { echo "Failed to change directory to $PROJECT_DIR"; exit 1; }
 
 # Run the script with model alias framework
-python3 data_generation_scripts/big_math_rl/general_inference/vllm_serving.py \
+python3 utils/general_inference/vllm_serving.py \
     --model_config "$MODEL" \
     --num_partitions $NUM_PARTITIONS \
     --output_dir "$OUTPUT_DIR" \
@@ -107,9 +107,9 @@ else
 fi
 
 if [ "$TASK" == "crux-i" ]; then
-    EVAL_SCRIPT="data_generation_scripts/big_math_rl/verifiable_evaluation/crux_eval/eval.py"
+    EVAL_SCRIPT="utils/verifiable_evaluation/crux_eval/eval.py"
 else
-    EVAL_SCRIPT="data_generation_scripts/big_math_rl/verifiable_evaluation/math_eval/eval.py"
+    EVAL_SCRIPT="utils/verifiable_evaluation/math_eval/eval.py"
 fi
 
 if [ "$TASK" == "24-game" ]; then

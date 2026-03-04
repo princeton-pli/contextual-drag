@@ -29,6 +29,9 @@ for MODEL in "${MODELS[@]}"; do
             TEMPLATE_KEY="1f_qa_mc"
         fi
 
+        JOB_NAME="${TASK}-1f-N${N_SAMPLES}-${MODEL}"
+        echo "Starting ${JOB_NAME}"
+
         bash $launch_script_path \
             --task $TASK \
             --model $MODEL \

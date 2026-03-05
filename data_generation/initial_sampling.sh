@@ -14,7 +14,7 @@ export TRANSFORMERS_OFFLINE=True
 export TIKTOKEN_ENCODINGS_BASE="misc/gpt-oss-harmony/encodings"
 
 # Generate initial responses to problems
-python3 general_inference/vllm_serving.py \
+python3 utils/general_inference/vllm_serving.py \
     --model_config "$MODEL" \
     --num_partitions $NUM_PARTITIONS \
     --output_dir "$OUTPUT_DIR" \
@@ -30,7 +30,7 @@ python3 general_inference/vllm_serving.py \
 
 
 # Evaluate
-python verifiable_evaluation/math_eval/eval.py -f -s -d "$OUTPUT_DIR"
+python utils/verifiable_evaluation/math_eval/eval.py -f -s -d "$OUTPUT_DIR"
 
 # Postprocess the output
 python data_generation/initial_sampling_postprocess.py -i "$OUTPUT_DIR"

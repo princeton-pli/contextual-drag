@@ -29,9 +29,9 @@ for STEP in {1..15}; do
         INPUT_DIR="${OUTPUT_BASE}/step${PREV_STEP}/${TASK}"
     fi
         
-    PROCESS_COMMAND="stage1_postprocess_iterative.py -t */*flattened.jsonl -i ${INPUT_DIR} -r ${STEP} -o ${OUTPUT_BASE}/step${STEP}/${TASK}"
+    PROCESS_COMMAND="data_generation/stage1_postprocess_iterative.py -t */*flattened.jsonl -i ${INPUT_DIR} -r ${STEP} -o ${OUTPUT_BASE}/step${STEP}/${TASK}"
     GENERATE_INPUT="${OUTPUT_BASE}/step${STEP}/${TASK}/processed_flattened_step${STEP}_responses.ds"
-    GENERATE_COMMAND="aggregate_data_iterative.py -N 1 --init_response_models ${MODEL} --filter_init_response_completeness --filter_init_response_parsable_thinking --seed ${RUN_ID} -r ${STEP} -i ${GENERATE_INPUT}"
+    GENERATE_COMMAND="data_generation/aggregate_data_iterative.py -N 1 --init_response_models ${MODEL} --filter_init_response_completeness --filter_init_response_parsable_thinking --seed ${RUN_ID} -r ${STEP} -i ${GENERATE_INPUT}"
 
     DATA_PATH="${OUTPUT_BASE}/step${PREV_STEP}/${TASK}/step${STEP}.ds"
 

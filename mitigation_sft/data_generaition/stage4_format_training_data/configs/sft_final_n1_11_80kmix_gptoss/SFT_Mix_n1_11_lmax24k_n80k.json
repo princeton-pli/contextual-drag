@@ -1,0 +1,23 @@
+{
+    "total_size": 80000,
+    "length_limit": 24576,
+    "tokenizer": "openai/gpt-oss-20b",
+    "mixing_seed": 42,
+    "SV_think_mix": true,
+    "remap_sv_index": true,
+    "replace_only_for_multidraft": true,
+    "ds_name": "GPTOSS_SFT_n1_11_lmax24k_n80k",
+    "aggregate_prompt_template": "aggregate_prompt_template",
+    "answer_reuse_template": "gptoss_reuse_solution_single_draft",
+    "answer_new_template": "gptoss_new_solution_single_draft",
+    "training_sources": [
+        {
+            "path": "../stage3_aggregation/outputs/GPT_OSS_20B/sft_N40000_T0_F1_SVTrue_IRComplete.ds",
+            "weight": 40000
+        },
+        {
+            "path": "../stage3_aggregation/outputs/GPT_OSS_20B/sft_N40000_T1_F0_SVTrue_IRComplete.ds",
+            "weight": 40000
+        }
+    ]
+}

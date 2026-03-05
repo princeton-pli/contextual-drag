@@ -2,16 +2,17 @@
 
 <div align="center">
 
-[![arXiv](https://img.shields.io/badge/arXiv-xxxx.xxxxx-b31b1b.svg?style=flat)](https://arxiv.org)
+[![arXiv](https://img.shields.io/badge/arXiv-2602.04288-b31b1b.svg?style=flat)](https://arxiv.org/abs/2602.04288)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Email me](https://img.shields.io/badge/Contact-6fcf97?logo=gmail)](mailto:yuncheng@princeton.com)
 
-## 1. Introduction
 
 <div>
   <img width="90%" src=assets/context-drag-overview.png>
 </div>
+</div>
 
+## 1. Introduction
 Central to many self-improvement pipelines for large language models (LLMs) is the assumption that models can improve by reflecting on past mistakes. We study a phenomenon termed *contextual drag*: the presence of failed attempts in the context biases subsequent generations toward structurally similar errors.
 
 Across evaluations of 11 proprietary and open-weight models on 8 reasoning tasks, contextual drag induces 10-20% performance drops, and iterative self-refinement in models with severe contextual drag can collapse into self-deterioration. Structural analysis using tree edit distance reveals that subsequent reasoning trajectories inherit structurally similar error patterns from the context.
@@ -31,6 +32,7 @@ pip install -r requirements.txt
 ```
 
 **Step 1: Get initial responses**
+
 Generate a pool of initial model responses for each benchmark. This step is necessary to identify correct and incorrect reasoning paths for subsequent context construction:
 ```bash
 bash data_generation/initial_sampling.sh
@@ -38,6 +40,7 @@ bash data_generation/initial_sampling.sh
 *Note: This script performs vLLM-based inference, evaluates the results, and post-processes them into a flattened dataset format.*
 
 **Step 2: Generate Contextual Drag Datasets**
+
 Construct datasets where the model is presented with 2 failed attempts (2F) or 2 successful attempts (2T) in its context:
 ```bash
 # Generate datasets with 2 failed attempts in context

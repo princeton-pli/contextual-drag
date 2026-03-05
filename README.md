@@ -12,16 +12,16 @@
 </div>
 </div>
 
-## 1. Introduction
 Central to many self-improvement pipelines for large language models (LLMs) is the assumption that models can improve by reflecting on past mistakes. We study a phenomenon termed *contextual drag*: the presence of failed attempts in the context biases subsequent generations toward structurally similar errors.
 
 Across evaluations of 11 proprietary and open-weight models on 8 reasoning tasks, contextual drag induces 10-20% performance drops, and iterative self-refinement in models with severe contextual drag can collapse into self-deterioration. Structural analysis using tree edit distance reveals that subsequent reasoning trajectories inherit structurally similar error patterns from the context.
 
 We demonstrate that neither external feedback nor successful self-verification suffices to eliminate this effect. While mitigation strategies such as fallback-behavior fine-tuning and context denoising yield partial improvements, they fail to fully restore baseline performance, positioning contextual drag as a persistent failure mode in current reasoning architectures
 
-## 2. Usage
+Authors: [Yun Cheng](https://kapikantzari.github.io/) (`yuncheng at princeton dot edu`), [Xingyu Zhu](https://ultimatejupiter.github.io/), [Haoyu Zhao](https://hyzhao.me/), [Sanjeev Arora](https://www.cs.princeton.edu/~arora/)
 
-### Evaluating Contextual Drag on Benchmarks
+
+## 1. Evaluating Contextual Drag on Benchmarks
 
 To reproduce the contextual drag evaluations, follow these steps to prepare the data and run the inference scripts.
 
@@ -66,16 +66,40 @@ bash evals/1f.sh
 bash evals/2f.sh
 ```
 
-## 3. Analysis
+## 2. Quantitative Analysis of Contextual Drag
 
-### Tree-Edit Distance (TED) Analysis
+### Tree-Edit Distance (TED) Analysis (section 2.3)
 We use Tree Edit Distance to quantify the structural inheritance of errors. This analysis reveals how subsequent reasoning trajectories mimic the logical structure of the errors provided in the context.
 - **Location**: [`analysis/TED`](analysis/TED)
 - **Key Scripts**: `edit_distance_analysis.py` (computation) and `visualize_anchored_main.py` (plotting).
 - See [analysis/TED/README.md](analysis/TED/README.md) for detailed usage.
 
-### Error Signal Conditioning
+### Error Signal Conditioning (section 3)
 This analysis investigates whether model awareness of an error (either through external prompting or self-detection) mitigates the contextual drag effect.
 - **Location**: [`analysis/ErrorSignalConditioning`](analysis/ErrorSignalConditioning)
 - **Key Scripts**: `analysis.py` (metrics generation) and `visualize_drop.py` (heatmap generation).
 - See [analysis/ErrorSignalConditioning/README.md](analysis/ErrorSignalConditioning/README.md) for details.
+
+## 3. Attempts for Mitigating Contextual Drag
+
+### Contextual Denoising (section 4.1)
+We explore context denoising as a strategy to mitigate the impact of failed attempts by filtering or re-weighting the context.
+- See [context_denoising/README.md](context_denoising/README.md) for more information.
+
+### Mitigation via SFT (Fallback-behavior Fine-tuning) (section 4.2)
+We demonstrate a mitigation strategy using Supervised Fine-Tuning (SFT) on synthetic reasoning traces to encourage "fallback" behavior when errors are detected in the context.
+- **Location**: [`mitigation_sft`](mitigation_sft)
+- See [mitigation_sft/README.md](mitigation_sft/README.md) for the complete data generation and training pipeline.
+
+## Citation
+```bibtex
+@misc{cheng2026contextualdrag,
+      title={Contextual Drag: How Errors in the Context Affect LLM Reasoning}, 
+      author={Yun Cheng and Xingyu Zhu and Haoyu Zhao and Sanjeev Arora},
+      year={2026},
+      eprint={2602.04288},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2602.04288}, 
+}
+```

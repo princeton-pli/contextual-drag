@@ -8,22 +8,24 @@ import multiprocessing
 from .code_utils import extract_code_answer
 from .crux_utils_general import evaluate_score
 import numpy as np
+from joblib import Parallel, delayed
+from tqdm import tqdm
 
 
 def evaluate_single_response(response: Dict[str, Any], cio: Tuple[str, str, str], mode: str) -> Dict[str, Any]:
     """
     Evaluate a single response by comparing extracted answer with ground truth.
     This function is designed to be used in parallel processing.
-    
+
     Args:
         response: The response dictionary
         ground_truth: The ground truth answer
-        
+
     Returns:
         The response dictionary with added 'correctness' and 'extracted_answer' fields
     """
     response_text = response.get('generated_response', '')
-    
+
     # Extract answer from response
     extracted_answer = extract_code_answer(response_text, mode)
 
@@ -33,18 +35,18 @@ def evaluate_single_response(response: Dict[str, Any], cio: Tuple[str, str, str]
     # print(response_text)
     # print('='*100)
 
-    
+
     if extracted_answer is None:
         correctness = [False]
     else:
         correctness = evaluate_score([[extracted_answer], cio, mode])
         # print(correctness)
-    
+
     # Add correctness to response (create a copy to avoid modifying the original)
     response_copy = response.copy()
     response_copy['correctness'] = correctness[0]
     response_copy['extracted_answer'] = extracted_answer
-    
+
     return response_copy
 
 
@@ -52,10 +54,10 @@ def evaluate_single_entry(entry: Dict[str, Any], response_column: str) -> Dict[s
     """
     Evaluate all responses for a single entry.
     This function is designed to be used in parallel processing.
-    
+
     Args:
         entry: A single dataset entry with question and responses
-        
+
     Returns:
         The entry with evaluated responses
     """
@@ -70,19 +72,19 @@ def evaluate_single_entry(entry: Dict[str, Any], response_column: str) -> Dict[s
     answer_column = "answer"
 
     cio = (code_val, input_val, output_val)
-    
+
     if response_column not in entry:
         return entry
-    
+
     # Create a copy of the entry to avoid modifying the original
     entry_copy = entry.copy()
     entry_copy[response_column] = []
-    
+
     # Evaluate each response
     for response in entry[response_column]:
         evaluated_response = evaluate_single_response(response, cio, mode_val)
         entry_copy[response_column].append(evaluated_response)
-    
+
     return entry_copy
 
 
@@ -91,19 +93,19 @@ def evaluate_responses(dataset: List[Dict[str, Any]], answer_column: str, respon
     Evaluate all responses in the dataset by comparing extracted answers with ground truth.
     Uses parallel processing for improved performance.
     Adds 'correctness' field to each response.
-    
+
     Args:
         dataset: List of dataset entries
         n_jobs: Number of parallel jobs. If None, uses all available CPU cores.
-        
+
     Returns:
         Dataset with evaluated responses
     """
     if n_jobs is None:
         n_jobs = min(multiprocessing.cpu_count(), len(dataset))
-    
+
     print(f"Evaluating responses using {n_jobs} parallel jobs...")
-    
+
     # evaluated_entries = [evaluate_single_entry(entry) for entry in tqdm(dataset, desc="Evaluating")]
     # Use joblib to parallelize the evaluation process with multiprocessing
     with ProcessPoolExecutor() as executor:
@@ -111,7 +113,7 @@ def evaluate_responses(dataset: List[Dict[str, Any]], answer_column: str, respon
         evaluated_entries = executor.map(evaluate_single_entry, dataset, [response_column] * len(dataset))
     evaluated_entries = list(evaluated_entries)
 
-        
+
     return evaluated_entries
 
 def analyze_response_errors(dataset: List[Dict[str, Any]], answer_column: str, response_column: str) -> Dict[str, Any]:
@@ -122,7 +124,7 @@ def analyze_response_errors(dataset: List[Dict[str, Any]], answer_column: str, r
     # Calculate pass@k metrics by source
     pass_at_k_stats = pass_and_maj_at_k_by_source(dataset, answer_column, response_column)
     print(pass_at_k_stats)
-    
+
     # Basic error statistics
     error_stats = {
         'pass_at_k_by_source': pass_at_k_stats,
@@ -136,30 +138,30 @@ def analyze_response_errors(dataset: List[Dict[str, Any]], answer_column: str, r
     }
     if 'overall_stats' in pass_at_k_stats:
         error_stats['overall_stats'] = pass_at_k_stats['overall_stats']
-    
+
     for entry in dataset:
         if response_column not in entry:
             print(f"Warning: {response_column} not found in entry {entry.get('id', 'unknown')}")
             continue
-            
+
         question_id = entry.get('id', 'unknown')
         ground_truth = entry.get(answer_column, 'unknown')
         has_correct = False
         has_parsable = False
         all_unparsable = True
-        
+
         for response in entry[response_column]:
             correctness = response.get('correctness')
             extracted_answer = response.get('extracted_answer')
-            
+
             # Track finish reason statistics
             finish_reason = response.get('finish_reason', 'unknown')
             error_stats['finish_reason_stats'][finish_reason] = error_stats['finish_reason_stats'].get(finish_reason, 0) + 1
-            
+
             # Track finish reason vs correctness correlation
             if finish_reason not in error_stats['finish_reason_correctness']:
                 error_stats['finish_reason_correctness'][finish_reason] = {'correct': 0, 'incorrect': 0, 'unparsable': 0}
-            
+
             if correctness is True:
                 error_stats['finish_reason_correctness'][finish_reason]['correct'] += 1
                 has_correct = True
@@ -169,12 +171,12 @@ def analyze_response_errors(dataset: List[Dict[str, Any]], answer_column: str, r
                 error_stats['finish_reason_correctness'][finish_reason]['incorrect'] += 1
                 has_parsable = True
                 all_unparsable = False
-                
+
                 # Track only a few common incorrect patterns (limit to top 5)
                 if extracted_answer and len(error_stats['common_incorrect_patterns']) < 5:
                     pattern = extracted_answer[:30]  # First 30 chars as pattern
                     error_stats['common_incorrect_patterns'][pattern] = error_stats['common_incorrect_patterns'].get(pattern, 0) + 1
-                    
+
             elif correctness is None:
                 error_stats['finish_reason_correctness'][finish_reason]['unparsable'] += 1
                 error_stats['unparsable_responses'].append({
@@ -183,33 +185,33 @@ def analyze_response_errors(dataset: List[Dict[str, Any]], answer_column: str, r
                     'response_id': response.get('response_id'),
                     'response_text': response.get('generated_response', '')[:200]  # First 200 chars
                 })
-        
+
         # Check if all responses for this question are incorrect or unparsable
         if not has_correct and len(entry[response_column]) > 0:
             error_stats['questions_with_all_incorrect'] += 1
         if all_unparsable and len(entry[response_column]) > 0:
             error_stats['questions_with_all_unparsable'] += 1
-    
+
     # Keep only top 5 most common incorrect patterns
     if error_stats['common_incorrect_patterns']:
-        sorted_patterns = sorted(error_stats['common_incorrect_patterns'].items(), 
+        sorted_patterns = sorted(error_stats['common_incorrect_patterns'].items(),
                                key=lambda x: x[1], reverse=True)
         error_stats['common_incorrect_patterns'] = dict(sorted_patterns[:5])
-    
+
     return error_stats
 
 def get_majority_correctness_and_pass_at_k(answer_ls, correctness_ls):
 
     # If there exist a true in correctness_ls, return True
     pass_at_k = True if True in correctness_ls else False
-    
+
     n_correct = 0
     answer_to_correctness = {}
     for answer, correctness in zip(answer_ls, correctness_ls):
         if correctness == True:
             n_correct += 1
         answer_to_correctness[answer] = correctness
-    
+
     # We know majority vote is correct if more than half of the answers are correct
     if n_correct > len(answer_ls) / 2:
         return True, True
@@ -232,7 +234,7 @@ def get_majority_correctness_and_pass_at_k(answer_ls, correctness_ls):
     for answer_key in answer_bins:
         if answer_bins[answer_key] == max_freq:
             max_freq_correctness.append(answer_to_correctness[answer_key])
-    
+
     return bool(np.random.choice(max_freq_correctness)), pass_at_k
 
 def compute_majk_and_passk_sliding(answer_ls, correctness_ls, k):
@@ -250,7 +252,7 @@ def compute_majk_and_passk_sliding(answer_ls, correctness_ls, k):
         maj_correctness, pass_at_k = get_majority_correctness_and_pass_at_k(answer_window, correctness_window)
         maj_at_k_ls.append(maj_correctness)
         pass_at_k_ls.append(pass_at_k)
-    
+
     return maj_at_k_ls, pass_at_k_ls
 
 def compute_majk_and_passk_stats(answer_ls, correctness_ls):
@@ -267,7 +269,7 @@ def compute_majk_and_passk_stats(answer_ls, correctness_ls):
 def pass_and_maj_at_k_by_source(dataset: List[Dict[str, Any]], answer_column: str, response_column: str) -> Dict[str, Dict[str, Any]]:
     """
     Calculate pass@k metrics for each data source.
-    
+
     Returns:
         Dictionary mapping source -> {
             'pass_at_k': [pass@1, pass@2, ..., pass@n],
@@ -281,7 +283,7 @@ def pass_and_maj_at_k_by_source(dataset: List[Dict[str, Any]], answer_column: st
     source_to_inds = {'overall': list(range(len(dataset)))}
 
     extracted_answer_correctness_ls = []
-    
+
     for i, entry in enumerate(dataset):
         source = entry.get('source', 'unknown')
         if source not in source_to_inds:

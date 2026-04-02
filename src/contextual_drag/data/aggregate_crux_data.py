@@ -1,5 +1,4 @@
 import math
-import argparse
 from pathlib import Path
 
 import numpy as np
@@ -7,92 +6,6 @@ from datasets import Dataset, load_from_disk
 from tqdm import tqdm
 
 from contextual_drag.data.common import load_split_ids
-
-
-def parse_args(argv=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--input_dir', '-i',
-        type=str,
-        default='processed_flattened_outputs',
-        help="Input data file to be sampled from."
-    )
-    parser.add_argument(
-        '--num_true', '-T',
-        type=int,
-        default=0,
-        help="Number of correct trajectories to create for each sample."
-    )
-    parser.add_argument(
-        '--num_false', '-F',
-        type=int,
-        default=2,
-        help="Number of incorrect trajectories to create for each sample."
-    )
-    parser.add_argument(
-        '--output_dir',
-        type=str,
-        default=None,
-        help="Output directory to save the stitched data."
-    )
-    parser.add_argument(
-        '--seed',
-        type=int,
-        default=42,
-        help="Random seed."
-    )
-    parser.add_argument(
-        '--problem_id_column',
-        type=str,
-        default='id',
-        help="Column name containing the problem id."
-    )
-    parser.add_argument(
-        '--init_response_correctness_column',
-        type=str,
-        default='init_response_generations_correctness',
-        help="Column name containing the correctness of the initial response."
-    )
-    parser.add_argument(
-        '--filter_init_response_parsable_thinking',
-        action='store_true',
-        default=False,
-        help="Filter data based on init response parsable thinking."
-    )
-    parser.add_argument(
-        '--data_split',
-        type=str,
-        default='none',
-        help="Data split to sample from."
-    )
-    parser.add_argument(
-        '--init_response_models',
-        nargs='+',
-        type=str,
-        default=None,
-        help="Models of which to sample init response."
-    )
-    # Whether to filter data based on init response completeness
-    parser.add_argument(
-        '--filter_init_response_completeness',
-        action='store_true',
-        default=False,
-        help="Filter data based on init response completeness."
-    )
-    parser.add_argument(
-        '--split_root',
-        type=str,
-        default=None,
-        help="Directory containing split JSON files. Required in installed mode if --data_split is used.",
-    )
-    parser.add_argument(
-        '--execution_mode',
-        type=str,
-        default=None,
-        choices=['workspace', 'installed'],
-        help="Explicit execution mode override for path resolution.",
-    )
-    return parser.parse_args(argv)
 
 def log_args(args):
     """
@@ -219,8 +132,7 @@ def sample_combos(ds, problem_to_entries, sampled_problem_ids, args):
     # sample_combo)(problem_id) for problem_id in sampled_problem_ids)
     return sampled_problems
 
-def main(argv=None):
-    args = parse_args(argv)
+def main(args):
     log_args(args)
     np.random.seed(args.seed)
 
@@ -276,7 +188,3 @@ def main(argv=None):
 
     print(f"Saved aggregated data to {output_file_path}")
     return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

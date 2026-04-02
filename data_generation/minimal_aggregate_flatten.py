@@ -16,9 +16,9 @@ def _bootstrap_import() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     _bootstrap_import()
-    from contextual_drag.data.minimal_aggregate_flatten import main as packaged_main
+    from contextual_drag.data.minimal_aggregate_flatten_cli import MinimalAggregateFlattenCLI
 
-    return int(packaged_main(argv) or 0)
+    return int(MinimalAggregateFlattenCLI.main(argv=argv) or 0)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 from collections import Counter
 import json
 from glob import glob
-import argparse
 from pathlib import Path
 from tqdm import tqdm
 from datasets import Dataset
@@ -77,15 +76,7 @@ def get_unique_traj_id(entry, r):
             f'round{r}'
         ]])
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(description="Preprocess and flatten dataset")
-    parser.add_argument("--input_dir", "-i", type=str, required=True, help="Input directory containing JSONL files")
-    parser.add_argument("--input_file_template", "-t", type=str, default="*/*/*flattened.jsonl", help="Input file pattern (default: dataset-*.jsonl)")
-    parser.add_argument("--output_dir", "-o", type=str, default=None, help="Output directory for the processed dataset")
-    parser.add_argument("--max_response_length", "-m", type=int, default=16384, help="Maximum response length")
-    parser.add_argument("--round_num", "-r", type=int, default=0, help="Round number for recursive processing")
-    args = parser.parse_args(argv)
-
+def main(args):
     input_dir = Path(args.input_dir)
     max_response_length = args.max_response_length
     if args.output_dir:
@@ -139,6 +130,3 @@ def main(argv=None):
     print(f"Preprocessing complete. Processed {len(processed_entries)} entries.")
     print(f"Output saved to '{output_file}'.")
     return 0
-
-if __name__ == "__main__":
-    raise SystemExit(main())

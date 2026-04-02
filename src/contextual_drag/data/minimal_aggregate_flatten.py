@@ -1,17 +1,11 @@
 from datasets import load_from_disk
-import argparse
 import datasets
 from pathlib import Path
 
 from tqdm import tqdm
 import copy
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(description="Minimal aggregate and flatten datasets")
-    parser.add_argument("--input-ds-path", required=True, help="Paths to input datasets")
-    parser.add_argument("--output-ds-path", default=None, help="Optional explicit output dataset path.")
-
-    args = parser.parse_args(argv)
+def main(args):
     dataset = load_from_disk(args.input_ds_path)
     print(f"Loaded dataset from {args.input_ds_path}")
 
@@ -46,6 +40,3 @@ def main(argv=None):
     # For now, let's just print the length of the new dataset
     print(f"Processed dataset length: {len(ds_new)}")
     return 0
-
-if __name__ == "__main__":
-    raise SystemExit(main())

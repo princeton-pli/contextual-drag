@@ -16,9 +16,9 @@ def _bootstrap_import() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     _bootstrap_import()
-    from contextual_drag.data.aggregate_data_iterative import main as packaged_main
+    from contextual_drag.data.aggregate_data_iterative_cli import AggregateDataIterativeCLI
 
-    return int(packaged_main(argv) or 0)
+    return int(AggregateDataIterativeCLI.main(argv=argv) or 0)
 
 
 if __name__ == "__main__":

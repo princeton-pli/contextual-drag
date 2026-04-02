@@ -16,9 +16,9 @@ def _bootstrap_import() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     _bootstrap_import()
-    from contextual_drag.data.initial_sampling_postprocess import main as packaged_main
+    from contextual_drag.data.initial_sampling_postprocess_cli import InitialSamplingPostprocessCLI
 
-    return int(packaged_main(argv) or 0)
+    return int(InitialSamplingPostprocessCLI.main(argv=argv) or 0)
 
 
 if __name__ == "__main__":

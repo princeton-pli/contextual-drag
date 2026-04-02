@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Batch inference script using vLLM for OpenThoughts data generation."""
 
-import argparse
 from tqdm import tqdm
 from datasets import Dataset
 
@@ -35,78 +34,6 @@ from contextual_drag.inference.validation_utils import (
 )
 
 
-def parse_args(argv=None):
-    """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description="Batch inference with vLLM on OpenThoughts data")
-    
-    # Model configuration
-    parser.add_argument("--model_config", type=str, default="Qwen3_8B_Thinking",
-                        help="Model configuration alias from eval_models_params.json")
-    parser.add_argument("--config_path", type=str, default=None,
-                        help="Path to model configuration JSON file (default: ../eval_models_params.json)")
-    parser.add_argument("--list_models", action="store_true", default=False,
-                        help="List available model configurations and exit")
-    
-    # vLLM engine parameters (not in JSON config)
-    parser.add_argument("--tensor_parallel_size", type=int, default=1,
-                        help="Number of GPUs for tensor parallelism")
-    parser.add_argument("--gpu_memory_utilization", type=float, default=0.95,
-                        help="GPU memory utilization ratio")
-    
-    # Sampling parameter overrides (optional - will override JSON config if provided)
-    parser.add_argument("--temperature", type=float, default=None,
-                        help="Override sampling temperature from config")
-    parser.add_argument("--top_p", type=float, default=None,
-                        help="Override top-p (nucleus) sampling parameter from config")
-    parser.add_argument("--top_k", type=int, default=None,
-                        help="Override top-k sampling parameter from config")
-    parser.add_argument("--max_tokens", type=int, default=None,
-                        help="Override maximum number of tokens to generate from config")
-    parser.add_argument("--seed", type=int, default=42,
-                        help="Random seed for sampling")
-    parser.add_argument("--n", type=int, default=1,
-                        help="Number of responses to sample per question")
-    
-    # Specific generation task name
-    parser.add_argument("--task_name", type=str, default="inference",
-                        help="Name of the generation task")
-    
-    # Data parameters
-    parser.add_argument("--data_path", type=str, 
-                        help="Path to the HF dataset directory containing questions")
-    parser.add_argument("--output_dir", type=str, default="./outputs",
-                        help="Directory to save generated responses")
-    parser.add_argument("--batch_size", type=int, default=32,
-                        help="Batch size for inference")
-    parser.add_argument("--max_questions", type=int, default=None,
-                        help="Maximum number of questions to process")
-    
-    # Template parameters
-    parser.add_argument("--prompt_template_path", type=str, required=True,
-                        help="Path to JSON file containing prompt templates")
-    parser.add_argument("--prompt_template_key", type=str, required=True,
-                        help="Key in the template JSON file to use for prompts")
-    
-    # SLURM array job parameters
-    parser.add_argument("--num_partitions", type=int, default=1,
-                        help="Total number of partitions for SLURM array jobs")
-    parser.add_argument("--partition_id", type=int, default=None,
-                        help="Current partition ID (0-indexed). If None, will use SLURM_ARRAY_TASK_ID from environment")
-    
-    # Generation parameters
-    parser.add_argument("--enable_thinking", action="store_true", default=False,
-                        help="Enable thinking mode in chat template (overrides config)")
-    parser.add_argument("--disable_thinking", action="store_true", default=False,
-                        help="Disable thinking mode in chat template")
-
-    parser.add_argument("--resume", action="store_true", default=False,
-                        help="Resume generation from existing JSONL file (skip already processed questions)")
-    parser.add_argument("--no_resume", action="store_true", default=False,
-                        help="Force restart generation (ignore existing JSONL file)")
-    
-    return parser.parse_args(argv)
-
-
 def process_dataset(dataset, args, config, llm, tokenizer, partition_id):
     """Process the HF dataset with the given configuration"""
     log_processing_start(len(dataset))
@@ -127,7 +54,7 @@ def process_dataset(dataset, args, config, llm, tokenizer, partition_id):
     output_path = get_output_filename(args.output_dir, "dataset", partition_id, args.num_partitions)
     
     # Determine resume behavior
-    should_resume = args.resume and not args.no_resume
+    should_resume = bool(args.resume)
     initialize_output_file(output_path, resume=should_resume)
     
     # Prepare prompts from dataset to get the question column
@@ -192,19 +119,17 @@ def process_dataset(dataset, args, config, llm, tokenizer, partition_id):
     log_generation_results(total_processed, args.n, output_path, final_processed_count)
 
 
-def main(argv=None):
-    """Main function"""
-    args = parse_args(argv)
+def list_model_configs(args):
+    if list_available_models(args.config_path):
+        return 0
+    return 1
+
+
+def main(args):
+    """Run the vLLM inference pipeline using a parsed config object."""
     from transformers import AutoTokenizer
     from vllm import LLM
-    
-    # Handle list models option
-    if args.list_models:
-        if list_available_models(args.config_path):
-            return 0
-        else:
-            return 1
-    
+
     # Merge configuration with command line arguments
     config = merge_config_with_args(args)
     
@@ -251,7 +176,4 @@ def main(argv=None):
     process_dataset(data, args, config, llm, tokenizer, partition_id)
     
     log_completion(partition_id)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+    return 0

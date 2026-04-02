@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Evaluation script for math datasets with multiple response trajectories."""
 
-import argparse
 from pathlib import Path
 
 from contextual_drag.evaluation.math.utils.dataset_utils import check_dataset_completeness, load_dataset
@@ -31,95 +30,7 @@ def verification_method_router(verification_method):
     return VERIFICATION_MAPPING[verification_method]
 
 
-def parse_args(argv=None):
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(
-        description="Evaluate math dataset with multiple response trajectories",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python eval.py --dataset_dir /path/to/dataset
-  python eval.py --dataset_dir /path/to/dataset --output evaluated_results.jsonl
-  python eval.py -d /path/to/dataset -o results.jsonl
-  python eval.py -d /path/to/dataset -j 8  # Use 8 parallel jobs
-  python eval.py -d /path/to/dataset -j 1  # Disable parallelization
-        """
-    )
-    
-    parser.add_argument(
-        "--dataset_dir", "-d",
-        type=str,
-        required=True,
-        help="Directory containing the dataset partition files (dataset-*of*.jsonl)"
-    )
-
-    parser.add_argument(
-        "--single_partition", "-s",
-        action='store_true',
-        help="If set, only evaluates a single partition (useful for debugging)"
-    )
-    
-    parser.add_argument(
-        "--output", "-o",
-        type=str,
-        default=None,
-        help="Output file path for the evaluated dataset (default: same directory as input with 'evaluated_' prefix)"
-    )
-    
-    parser.add_argument(
-        "--n_jobs", "-j",
-        type=int,
-        default=8,
-        help="Number of parallel jobs for evaluation (default: use all available CPU cores)"
-    )
-
-    parser.add_argument(
-        "--flatten_dataset", "-f",
-        action='store_true',
-        help="If set, flattens the dataset structure (useful for certain analyses)"
-    )
-
-    parser.add_argument(
-        "--answer_column", "-a",
-        type=str,
-        default="answer",
-        help="Column name containing the questions in HF dataset (default: 'problem')"
-    )
-
-    parser.add_argument(
-        "--response_column", "-r",
-        type=str,
-        default="init_response_generations",
-        help="Column name containing the responses in HF dataset (default: 'init_response_generations')"
-    ) 
-
-    parser.add_argument(
-        "--equivalent_parser", "-ep",
-        type=str,
-        default='math_verify',
-        help="Path to the equivalence parser"
-    )
-
-    parser.add_argument(
-        "--data_format", "-df",
-        type=str,
-        default='general_inference',
-        choices=['general_inference', 'openai_api', 'gemini_api'],
-        help="Data format to use for evaluation"
-    )
-
-    parser.add_argument(
-        "--problem_data_path_root",
-        type=str,
-        required=False,
-        help="Path to the problem data file"
-    )
-
-    return parser.parse_args(argv)
-
-
-def main(argv=None):
-    args = parse_args(argv)
+def main(args):
     if args.data_format != 'general_inference':
         assert args.problem_data_path_root is not None, "Problem data path root is required for non-general inference data format"
     
@@ -192,7 +103,3 @@ def main(argv=None):
     
     print("\nSUCCESS: Evaluation completed successfully!")
     return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

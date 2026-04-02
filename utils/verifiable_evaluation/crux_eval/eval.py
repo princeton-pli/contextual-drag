@@ -16,9 +16,9 @@ def _bootstrap_import() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     _bootstrap_import()
-    from contextual_drag.evaluation.crux.eval import main as packaged_main
+    from contextual_drag.evaluation.crux.eval_cli import EvalCruxCLI
 
-    return int(packaged_main(argv) or 0)
+    return int(EvalCruxCLI.main(argv=argv) or 0)
 
 
 if __name__ == "__main__":

@@ -16,9 +16,9 @@ def _bootstrap_import() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     _bootstrap_import()
-    from contextual_drag.data.stage1_postprocess_iterative import main as packaged_main
+    from contextual_drag.data.stage1_postprocess_iterative_cli import Stage1PostprocessIterativeCLI
 
-    return int(packaged_main(argv) or 0)
+    return int(Stage1PostprocessIterativeCLI.main(argv=argv) or 0)
 
 
 if __name__ == "__main__":

@@ -28,8 +28,51 @@ To reproduce the contextual drag evaluations, follow these steps to prepare the 
 **Step 0: Build environments**
 Install the required dependencies:
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
+
+For heavier runtime features, install extras as needed:
+```bash
+pip install -e ".[inference,eval,dev]"
+```
+
+The repository still supports the original script-oriented workflows, but reusable code now also lives in the installable `contextual_drag` package under `src/`.
+
+### Package Layout
+
+- `src/contextual_drag/inference`: reusable inference internals and the packaged inference entrypoint
+- `src/contextual_drag/evaluation`: reusable math and crux evaluation internals
+- `src/contextual_drag/data`: reusable data postprocess / aggregation helpers
+- `src/contextual_drag/config`: execution-mode, path, and packaged-resource helpers
+- `data/`, `outputs/`, `analysis/`, `context_denoising/`, `mitigation_sft/`: repo-level research workspace assets and workflows
+
+### Execution Modes
+
+The package supports two execution modes:
+
+- `workspace`: running inside a checked-out repository, where repo-relative defaults may be used
+- `installed`: running outside the repo, where external dataset / template / output paths must be passed explicitly or via environment variables
+
+You can override mode detection with:
+```bash
+export CONTEXTUAL_DRAG_EXECUTION_MODE=workspace
+export CONTEXTUAL_DRAG_EXECUTION_MODE=installed
+```
+
+### Minimal Python CLI
+
+The new package CLI is intentionally small in v1 and focuses on stable core commands:
+
+```bash
+python -m contextual_drag --help
+python -m contextual_drag inference run --help
+python -m contextual_drag inference list-models
+python -m contextual_drag eval math --help
+python -m contextual_drag eval crux --help
+python -m contextual_drag data initial-sampling-postprocess --help
+```
+
+The legacy script entrypoints remain in place and delegate to the packaged implementations where applicable.
 
 **Step 1: Get initial responses**
 
@@ -38,6 +81,12 @@ Generate a pool of initial model responses for each benchmark. This step is nece
 bash data_generation/initial_sampling.sh
 ```
 *Note: This script performs vLLM-based inference, evaluates the results, and post-processes them into a flattened dataset format.*
+
+The equivalent packaged entrypoints are:
+```bash
+python -m contextual_drag inference run --help
+python -m contextual_drag data initial-sampling-postprocess --help
+```
 
 **Step 2: Generate Contextual Drag Datasets**
 
@@ -90,6 +139,12 @@ We explore context denoising as a strategy to mitigate the impact of failed atte
 We demonstrate a mitigation strategy using Supervised Fine-Tuning (SFT) on synthetic reasoning traces to encourage "fallback" behavior when errors are detected in the context.
 - **Location**: [`mitigation_sft`](mitigation_sft)
 - See [mitigation_sft/README.md](mitigation_sft/README.md) for the complete data generation and training pipeline.
+
+## Migration Notes
+
+- `utils/general_inference/vllm_serving.py`, `utils/verifiable_evaluation/*/eval.py`, and selected `data_generation/*.py` entrypoints are now compatibility shims that delegate to `src/contextual_drag/...`.
+- Large research orchestration remains repo-level in v1; this refactor does not redesign `evals/1f.sh`, `evals/2f.sh`, most of `context_denoising`, or `mitigation_sft`.
+- Lightweight runtime assets required by the installed package are bundled under `src/contextual_drag/resources/`. Large datasets, generated outputs, and paper assets remain at repo level.
 
 ## Citation
 ```bibtex

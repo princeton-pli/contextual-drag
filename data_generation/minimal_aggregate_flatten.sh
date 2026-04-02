@@ -6,8 +6,8 @@ set -euo pipefail
 
 ROOT_DIR="${1:-.}"
 
-# location of this script to call the python script relative to it (adjust if needed)
-PY_SCRIPT="minimal_aggregate_flatten.py"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY_SCRIPT="${SCRIPT_DIR}/minimal_aggregate_flatten.py"
 
 if [[ ! -f "$PY_SCRIPT" ]]; then
     echo "Error: $PY_SCRIPT not found." >&2

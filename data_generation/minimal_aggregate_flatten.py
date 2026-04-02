@@ -1,45 +1,25 @@
-from datasets import load_from_disk
-import argparse
-import datasets
+#!/usr/bin/env python3
+"""Compatibility wrapper for the packaged minimal aggregate flatten entrypoint."""
 
-from tqdm import tqdm
-import copy
+from __future__ import annotations
 
-def main():
-    parser = argparse.ArgumentParser(description="Minimal aggregate and flatten datasets")
-    parser.add_argument("--input-ds-path", required=True, help="Paths to input datasets")
+import sys
+from pathlib import Path
 
-    args = parser.parse_args()
-    dataset = load_from_disk(args.input_ds_path)
-    print(f"Loaded dataset from {args.input_ds_path}")
 
-    new_ds = []
+def _bootstrap_import() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    src_path = repo_root / "src"
+    if str(src_path) not in sys.path:
+        sys.path.insert(0, str(src_path))
 
-    for example in tqdm(dataset):
 
-        flat_example1 = copy.deepcopy(example)
-        flat_example2 = copy.deepcopy(example)
+def main(argv: list[str] | None = None) -> int:
+    _bootstrap_import()
+    from contextual_drag.data.minimal_aggregate_flatten import main as packaged_main
 
-        flat_example1.pop("traj2")
-        flat_example1.pop("traj2_correctness")
-        flat_example1.pop("traj2_metadata")
+    return int(packaged_main(argv) or 0)
 
-        flat_example2["traj1"] = flat_example2.pop("traj2")
-        flat_example2["traj1_correctness"] = flat_example2.pop("traj2_correctness")
-        flat_example2["traj1_metadata"] = flat_example2.pop("traj2_metadata")
-
-        new_ds.append(flat_example1)
-        new_ds.append(flat_example2)
-
-    # Save the new dataset
-    new_ds_name = args.input_ds_path.replace("T2", "T1_flattend_from_T2")
-    print(f"Saving new dataset to {new_ds_name}")
-
-    ds_new = datasets.Dataset.from_list(new_ds)
-    ds_new.save_to_disk(new_ds_name)
-    # Assuming you want to save it to a path, you might want to add an argument for output path
-    # For now, let's just print the length of the new dataset
-    print(f"Processed dataset length: {len(ds_new)}")
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main(sys.argv[1:]))

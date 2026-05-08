@@ -123,32 +123,38 @@ def format_template_with_row(template: str, row: Dict, template_fields: Set[str]
     return formatted_template
 
 
-def check_and_truncate_prompt(prompt: str, tokenizer, max_tokens: Optional[int], 
-                             generation_tokens: int = 100, safety_margin: int = 50) -> Tuple[str, bool]:
+def check_and_truncate_prompt(prompt: str, tokenizer, max_tokens: Optional[int],
+                             max_model_len: Optional[int] = None,
+                             safety_margin: int = 50) -> Tuple[str, bool]:
     """
     Check if prompt exceeds the effective context length and truncate if necessary.
-    
+
+    The prompt budget is whatever is left of the model's context window after
+    reserving room for the generation: ``max_model_len - max_tokens - safety_margin``.
+
     Args:
         prompt: The full prompt text
         tokenizer: The tokenizer to count tokens
-        max_tokens: Maximum number of tokens for generation (from config)
-        generation_tokens: Reserved tokens for generation (default: 100)
-        safety_margin: Additional safety margin tokens (default: 50)
-    
+        max_tokens: Generation budget (sampling param ``max_tokens``)
+        max_model_len: The model's context window size in tokens (e.g.
+            ``config["context_length"]``). If ``None``, no truncation is
+            performed (we don't know the budget).
+        safety_margin: Additional safety margin in tokens (default: 50)
+
     Returns:
         Tuple[str, bool]: (potentially_truncated_prompt, was_truncated)
     """
-    if max_tokens is None:
-        # If no max_tokens specified, return prompt as-is
+    if max_model_len is None or max_tokens is None:
+        # Without both budgets we can't compute the prompt limit; skip.
         return prompt, False
-    
+
     try:
         # Tokenize the prompt to count tokens
         tokens = tokenizer.encode(prompt)
         prompt_token_count = len(tokens)
-        
-        # Calculate effective limit: reserve space for generation + safety margin
-        effective_limit = max_tokens - generation_tokens - safety_margin
+
+        # Calculate effective limit: model context minus generation reservation
+        effective_limit = max_model_len - max_tokens - safety_margin
         
         if prompt_token_count <= effective_limit:
             # Prompt is within limits
@@ -171,9 +177,10 @@ def check_and_truncate_prompt(prompt: str, tokenizer, max_tokens: Optional[int],
         return prompt, False
 
 
-def prepare_prompts_from_dataset(dataset: Dataset, tokenizer, enable_thinking: bool = True, 
-                                template_path: str = None, template_key: str = None, 
-                                max_tokens: Optional[int] = None) -> Tuple[List[str], str]:
+def prepare_prompts_from_dataset(dataset: Dataset, tokenizer, enable_thinking: bool = True,
+                                template_path: str = None, template_key: str = None,
+                                max_tokens: Optional[int] = None,
+                                max_model_len: Optional[int] = None) -> Tuple[List[str], str]:
     """Prepare prompts for batch inference from Hugging Face dataset using customizable templates
     
     Returns:
@@ -221,7 +228,8 @@ def prepare_prompts_from_dataset(dataset: Dataset, tokenizer, enable_thinking: b
             )
             
             # Apply safety check for prompt length
-            safe_text, was_truncated = check_and_truncate_prompt(text, tokenizer, max_tokens)
+            safe_text, was_truncated = check_and_truncate_prompt(
+                text, tokenizer, max_tokens, max_model_len=max_model_len)
             if was_truncated:
                 truncation_count += 1
             

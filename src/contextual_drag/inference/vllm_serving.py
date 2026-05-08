@@ -60,9 +60,11 @@ def process_dataset(dataset, args, config, llm, tokenizer, partition_id):
     # Prepare prompts from dataset to get the question column
     log_prompt_preparation()
     max_tokens = config["sampling_params"].get("max_tokens", None)
-    prompts, question_column = prepare_prompts_from_dataset(dataset, tokenizer, config["enable_thinking"], 
+    max_model_len = config.get("context_length")
+    prompts, question_column = prepare_prompts_from_dataset(dataset, tokenizer, config["enable_thinking"],
                                                           args.prompt_template_path, args.prompt_template_key,
-                                                          max_tokens=max_tokens)
+                                                          max_tokens=max_tokens,
+                                                          max_model_len=max_model_len)
     
     # Load already processed questions if resuming
     if should_resume:
@@ -86,9 +88,10 @@ def process_dataset(dataset, args, config, llm, tokenizer, partition_id):
     # Re-prepare prompts from filtered dataset (if dataset was filtered for resume)
     if should_resume and 'unprocessed_indices' in locals():
         log_prompt_re_preparation()
-        prompts, _ = prepare_prompts_from_dataset(dataset, tokenizer, config["enable_thinking"], 
+        prompts, _ = prepare_prompts_from_dataset(dataset, tokenizer, config["enable_thinking"],
                                                 args.prompt_template_path, args.prompt_template_key,
-                                                max_tokens=max_tokens)
+                                                max_tokens=max_tokens,
+                                                max_model_len=max_model_len)
     
     # Process in batches
     total_processed = 0

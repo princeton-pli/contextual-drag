@@ -149,7 +149,6 @@ def main(args):
     sampled_problem_ids = valid_problem_ids
 
     aggregated_data = sample_combos(ds, problem_to_entries, sampled_problem_ids, args)
-    output_ds = Dataset.from_list(aggregated_data)
     print(f"Sampled {len(aggregated_data)} combinations")
 
     if args.output_dir is None:
@@ -160,6 +159,20 @@ def main(args):
     output_dir.mkdir(parents=True, exist_ok=True)
     output_file_name = f"minimal_aggregated_data_T{args.num_true}_F{args.num_false}.ds"
     output_file_path = output_dir / output_file_name
+
+    if not aggregated_data:
+        print(
+            f"WARNING: 0 problems passed the aggregation filter "
+            f"(num_true={args.num_true}, num_false={args.num_false}, "
+            f"models={args.init_response_models}). "
+            f"Each problem must have at least num_true+num_false trajectories of "
+            f"each correctness class. Increase per-problem trajectory count "
+            f"(higher --n on `inference run`) or add more init_response_models. "
+            f"Not writing an empty dataset to {output_file_path}."
+        )
+        return 1
+
+    output_ds = Dataset.from_list(aggregated_data)
     output_ds.save_to_disk(str(output_file_path))
 
     print(f"Saved {n_samples} aggregated data to {output_file_path}")

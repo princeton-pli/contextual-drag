@@ -16,7 +16,15 @@ class InferenceRunCLI(scfg.DataConfig):
     max_tokens = scfg.Value(None, type=int, help="Override generation max tokens.")
     seed = scfg.Value(42, type=int, help="Sampling seed.")
     n = scfg.Value(1, type=int, help="Number of responses per prompt.")
-    task_name = scfg.Value("inference", help="Generation task name.")
+    task_name = scfg.Value(
+        "init_response",
+        help=(
+            "Generation task name; output columns are written as "
+            "`<task_name>_generations`, `<task_name>_prompt`, etc. "
+            "Defaults to 'init_response' so that downstream `eval math` / `eval crux` "
+            "find the column they expect without an explicit --response_column override."
+        ),
+    )
     data_path = scfg.Value(None, required=True, help="Path to the HF dataset directory.")
     output_dir = scfg.Value("./outputs", help="Directory to save generated responses.")
     batch_size = scfg.Value(32, type=int, help="Batch size for inference.")

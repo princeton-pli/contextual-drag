@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local working notes (not for upstream commit)
+PR-draft.md
+
+# Generated workflow outputs
+outputs/
+evaluation_runs/

@@ -5,18 +5,55 @@ import math
 import re
 from pathlib import Path
 from typing import List, Dict, Set, Tuple, Optional
-from datasets import Dataset, load_from_disk
+from datasets import Dataset, DatasetDict, load_from_disk
 
 
-def load_data(data_path: str) -> Dataset:
-    """Load data from Hugging Face dataset directory"""
+def load_data(data_path: str, split: Optional[str] = None) -> Dataset:
+    """Load a single ``datasets.Dataset`` from a saved HF directory.
+
+    Accepts either:
+      * a ``Dataset`` directory (contains ``dataset_info.json``), or
+      * a ``DatasetDict`` directory (contains ``dataset_dict.json``); in that
+        case, ``split`` is selected (defaulting to the canonical "test" split
+        used by this repo's benchmarks, falling back to the only split if
+        there is exactly one).
+    """
     data_path = Path(data_path)
-    if data_path.is_dir() and (data_path / "dataset_info.json").exists():
-        # Hugging Face dataset loading
-        dataset = load_from_disk(str(data_path))
-        return dataset
-    else:
-        raise ValueError(f"Invalid HF dataset path: {data_path}. Expected a directory containing 'dataset_info.json'.")
+    if not data_path.is_dir():
+        raise ValueError(f"Invalid HF dataset path: {data_path}. Expected a directory.")
+
+    if (data_path / "dataset_info.json").exists():
+        loaded = load_from_disk(str(data_path))
+        if not isinstance(loaded, Dataset):
+            raise TypeError(
+                f"Expected a Dataset at {data_path}, got {type(loaded).__name__}."
+            )
+        return loaded
+
+    if (data_path / "dataset_dict.json").exists():
+        dsdict = load_from_disk(str(data_path))
+        if not isinstance(dsdict, DatasetDict):
+            raise TypeError(
+                f"Expected a DatasetDict at {data_path}, got {type(dsdict).__name__}."
+            )
+        chosen = split or ("test" if "test" in dsdict else None)
+        if chosen is None and len(dsdict) == 1:
+            chosen = next(iter(dsdict))
+        if chosen is None:
+            raise ValueError(
+                f"DatasetDict at {data_path} has multiple splits {list(dsdict)}; "
+                f"pass split=... to load_data or point --data_path at a specific split subdirectory."
+            )
+        if chosen not in dsdict:
+            raise ValueError(
+                f"Split '{chosen}' not in DatasetDict at {data_path}; available: {list(dsdict)}."
+            )
+        return dsdict[chosen]
+
+    raise ValueError(
+        f"Invalid HF dataset path: {data_path}. Expected a directory containing "
+        f"'dataset_info.json' (Dataset) or 'dataset_dict.json' (DatasetDict)."
+    )
 
 
 def partition_dataset(dataset: Dataset, num_partitions: int, partition_id: int) -> Dataset:

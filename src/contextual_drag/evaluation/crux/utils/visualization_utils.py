@@ -2,6 +2,12 @@
 Visualization utilities for evaluation results.
 """
 
+import os
+import matplotlib
+
+if not os.environ.get("MPLBACKEND"):
+    matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from typing import Dict, List, Any

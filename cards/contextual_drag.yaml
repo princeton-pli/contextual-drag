@@ -39,7 +39,8 @@ tags:
 claim:
   python: |
     if drag is None:
-      raise AssertionError(
+      raise Exception(
+          "Inconclusive: "
           "drag is null; aggregation produced 0 problems — increase --n or "
           "use a benchmark in the model's ambiguous zone (gpqa works for "
           "Qwen3_8B; math500 too easy, aime24 too hard)."

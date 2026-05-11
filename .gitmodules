@@ -1,0 +1,4 @@
+[submodule "submodules/aiq-magnet"]
+	path = submodules/aiq-magnet
+	url = https://github.com/AIQ-Kitware/aiq-magnet.git
+	branch = main

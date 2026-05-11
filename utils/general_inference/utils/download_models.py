@@ -1,16 +1,19 @@
-import json
-import os
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
 from huggingface_hub import snapshot_download
 
-# Path to the eval_models_params.json file
-PARAMS_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-    "eval_models_params.json"
-)
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SRC_PATH = REPO_ROOT / "src"
+if str(SRC_PATH) not in sys.path:
+    sys.path.insert(0, str(SRC_PATH))
 
-# Load model names from the JSON config
-with open(PARAMS_PATH, "r") as f:
-    model_params = json.load(f)
+from contextual_drag.config.resources import inference_model_config_resource
+
+
+model_params = inference_model_config_resource()
 
 # Collect all unique model_id values
 model_ids = set()
